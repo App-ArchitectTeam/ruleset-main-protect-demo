@@ -3,6 +3,8 @@
 GitHub の Rulesets で「`main` と `main-*` への直接 push を禁止し、PR 経由だけにする」ことが本当にできるかを確かめるための、検証専用リポジトリ。
 中身はダミー（`sample.txt` だけ）。実案件の情報は入れない。
 
+手で触って確かめる手順は [ハンズオン_Ruleset.md](ハンズオン_Ruleset.md)。ターミナルでまとめて確かめるなら `bash verify.sh`。
+
 ## 結論
 
 **できる。** `main`・`main-*` への直接 push・force push・削除はすべて拒否され、PR のマージだけが通る。admin も止まる。
