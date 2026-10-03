@@ -6,7 +6,7 @@ GitHub の Rulesets で「`main` と `main-*` への直接 push を禁止し、P
 ## 結論
 
 **できる。** `main`・`main-*` への直接 push・force push・削除はすべて拒否され、PR のマージだけが通る。admin も止まる。
-ただし **`main-*` に当てはまる「新しいブランチ」の作成は、Restrict creations も ON にしないと止まらない**（下の #7・#8）。
+`main-*` に当てはまる「新しいブランチ」の作成は止まらない（#7）。ArgoCD は Application に書いたブランチしか読まないので、問題にならないと判断した。
 
 ## 前提
 
@@ -25,7 +25,7 @@ GitHub の Rulesets で「`main` と `main-*` への直接 push を禁止し、P
 | Enforcement status | Active |
 | Bypass list | なし |
 | Target branches | `main`、`main-*`（`main-*` は `main` 自体を含まないので2つとも入れる） |
-| Restrict creations | ON（`main-*` の新規作成も止める。#7・#8） |
+| Restrict creations | OFF（下の「#7 について」） |
 | Restrict deletions | ON |
 | Block force pushes | ON |
 | Require a pull request before merging | ON（Required approvals は 0） |
@@ -68,9 +68,10 @@ remote: - Changes must be made through a pull request.
  ! [remote rejected] main-ita -> main-ita (push declined due to repository rule violations)
 ```
 
-### #7 への対処
+### #7 について
 
-**Restrict creations** を ON にすると、`main-*` の新規作成も止められる（#8 で確認済み。設定の JSON にも入れてある）。その代わり、新しい工程のブランチを正式に作るときは、admin が一時的に Bypass list に自分を入れるなどの手間が増える。
-ブランチを新しく作る機会は少ないので、ON にすることをすすめる。
+守りたいのは「すでにあって ArgoCD が読んでいる `main-*` の中身」で、それは PR 必須・force push 禁止・削除禁止で守れている。新しく作ったブランチは、Application をそこへ向けない限りデプロイされないので、**Restrict creations は OFF にした**。新しい工程のブランチを Application に登録するときに、中身を人が確認する。
+
+新規作成も止めたい場合は Restrict creations を ON にする（#8 で効くことを確認済み）。その場合、新しいブランチを作るときは admin が一時的に Bypass list に入るなどの手間が増える。
 
 （検証で作った `main-itb` は、削除禁止のルールのため残している）
