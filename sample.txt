@@ -1,1 +1,1 @@
-value: v2
+value: via-pr
